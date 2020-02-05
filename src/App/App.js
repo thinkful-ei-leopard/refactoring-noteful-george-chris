@@ -5,7 +5,6 @@ import NoteListNav from '../NoteListNav/NoteListNav';
 import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
-import dummyStore from '../dummy-store';
 import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
 import './App.css';
 
@@ -15,9 +14,21 @@ class App extends Component {
         folders: []
     };
 
+    fetchFolders = () => {
+        fetch('http://localhost:9090/folders')
+            .then(response => response.json())
+            .then(apiFolders => this.setState({folders: apiFolders}))
+    }
+
+    fetchNotes = () => {
+        fetch('http://localhost:9090/notes')
+            .then(response => response.json())
+            .then(apiNotes => this.setState({notes: apiNotes}))
+    }
+
     componentDidMount() {
-        // fake date loading from API call
-        setTimeout(() => this.setState(dummyStore), 600);
+        this.fetchNotes();
+        this.fetchFolders();
     }
 
     renderNavRoutes() {
@@ -90,6 +101,8 @@ class App extends Component {
     }
 
     render() {
+        // this.fetchFolders();
+        // this.fetchNotes();
         return (
             <div className="App">
                 <nav className="App__nav">{this.renderNavRoutes()}</nav>
